@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained(
                 table: 'user_roles', indexName: 'user_role_id'
             );
+            $table->string('mobile_number');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

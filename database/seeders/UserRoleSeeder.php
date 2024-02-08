@@ -16,12 +16,14 @@ class UserRoleSeeder extends Seeder
         UserRole::insert(
             [
                 [
-                    'role_name' => 'admin',
+                    'role_name' => 'Admin',
                     'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => 'SYSTEM'
                 ],
                 [
-                    'role_name' => 'user',
+                    'role_name' => 'User',
                     'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => 'SYSTEM'
                 ],
             ]
         );

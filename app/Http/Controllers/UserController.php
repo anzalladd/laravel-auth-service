@@ -7,16 +7,33 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+  
     public function __construct()
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    /**
+     * Display a listing of the resource.
+    */
+    public function index(Request $request)
     {
-        $users = User::with('role')->get();
+        $roleIdToFilter = $request->query('role_id');
+
+        $query = User::with('role');
+
+        if ($roleIdToFilter !== null) {
+            $query->whereHas('role', function ($query) use ($roleIdToFilter) {
+                $query->where('role_id', $roleIdToFilter);
+            });
+        }
+
+        $per_page = $request->query('per_page');
+
+        if(!$per_page) {
+            $per_page = 5;
+        }
+
+        $users = $query->paginate($per_page);
         return response()->json(
             ['status' => 'success', 'data' => $users],
         );
@@ -25,7 +42,6 @@ class UserController extends Controller
     public function getDetail($userId)
     {
         $user = User::with('role')->find($userId);
-
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
@@ -33,53 +49,5 @@ class UserController extends Controller
         return response()->json(
             ['status' => 'success', 'data' => $user],
         );
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
-    {
-        //
     }
 }
