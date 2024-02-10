@@ -18,14 +18,28 @@ class UserRoleController extends Controller
     public function index(Request $request)
     {
         $per_page = $request->query('per_page');
+        $searchTerm = $request->query('search');
+        $sortField = $request->query('sort_field');
+        $sortOrder = $request->query('sort_order');
 
-        if (!$per_page) {
-            $per_page = 5;
+        $query = UserRole::query();
+
+        if ($searchTerm !== null) {
+            $query->where('role_name', 'like', '%' . $searchTerm . '%');
         }
 
-        $users = UserRole::paginate($per_page);
+        $per_page = $request->query('per_page', 5);
+
+        $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
+
+        if ($sortField !== null) {
+            $query->orderBy($sortField, $sortOrder);
+        }
+
+        $roles = $query->paginate($per_page);
+
         return response()->json(
-            ['status' => 'success', 'data' => $users],
+            ['status' => 'success', 'data' => $roles],
         );
     }
 
