@@ -25,6 +25,8 @@ Route::post('logout', [AuthController::class,'logout']);
 
 Route::get('user', [UserController::class, 'index']);
 Route::get('user/{id}', [UserController::class, 'getDetail']);
+Route::post('user/{id}', [UserController::class, 'update']);
+Route::post('user/delete/{id}', [UserController::class, 'destroy']);
 
 Route::get('role', [UserRoleController::class, 'index']);
 Route::get('role/{id}', [UserRoleController::class, 'getDetail']);

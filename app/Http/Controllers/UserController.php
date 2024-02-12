@@ -35,7 +35,7 @@ class UserController extends Controller
                 $query->where('name', 'like', '%' . $searchTerm . '%')
                     ->orWhere('email', 'like', '%' . $searchTerm . '%');
             });
-    
+
         }
 
         $per_page = $request->query('per_page', 5);
@@ -63,5 +63,49 @@ class UserController extends Controller
         return response()->json(
             ['status' => 'success', 'data' => $user],
         );
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'mobile_number' => 'required|string|min:6',
+        ]);
+
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'mobile_number' => $request->mobile_number,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User updated successfully',
+            'user_role' => $user,
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        $user->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User deleted successfully',
+        ]);
     }
 }
