@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
 
@@ -33,3 +34,7 @@ Route::get('role/{id}', [UserRoleController::class, 'getDetail']);
 Route::post('role', [UserRoleController::class, 'create']);
 Route::post('role/{id}', [UserRoleController::class, 'update']);
 Route::post('role/delete/{id}', [UserRoleController::class, 'destroy']);
+
+Route::get('/download/brocure', [DownloadController::class, 'brocure']);
+Route::get('/download/compro', [DownloadController::class, 'compro']);
+Route::get('/download/poclia', [DownloadController::class, 'poclia']);
